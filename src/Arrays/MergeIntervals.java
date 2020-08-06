@@ -31,6 +31,7 @@ public class MergeIntervals {
                 prev = curr;
             }
         }
+        result.add(prev);
         return result;
     }
 
