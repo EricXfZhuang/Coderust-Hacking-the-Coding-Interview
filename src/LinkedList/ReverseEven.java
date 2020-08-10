@@ -1,5 +1,7 @@
 package LinkedList;
 
+import org.junit.Test;
+
 /**
  * @Author EricZhuang
  * @Date 2020/8/9
@@ -38,36 +40,31 @@ public class ReverseEven {
         return newHead;
     }
 
-    public static LinkedListNode merge(LinkedListNode oddHead, LinkedListNode evenHead){
-        if(oddHead == null){
-            return evenHead;
-        }else if(evenHead == null){
-            return oddHead;
+    public static LinkedListNode merge(LinkedListNode list1, LinkedListNode list2){
+        if (list1 == null) {
+            return list2;
         }
 
-        LinkedListNode curr = oddHead;
-        LinkedListNode newHead = oddHead;
-        int count = 2;
-
-        while(oddHead != null && evenHead != null){
-            if(count % 2 == 0){
-                curr.next = evenHead;
-                evenHead = evenHead.next;
-            }else{
-                curr.next = oddHead;
-                oddHead = oddHead.next;
-            }
-            count++;
-            curr = curr.next;
+        if (list2 == null) {
+            return list1;
         }
 
-        if(evenHead != null){
-            curr.next = evenHead;
-        }else{
-            curr.next = oddHead;
+        LinkedListNode head = list1;
+
+        while (list1.next != null && list2 != null) {
+            LinkedListNode temp = list2;
+            list2 = list2.next;
+
+            temp.next = list1.next;
+            list1.next = temp;
+            list1 = temp.next;
         }
 
-        return newHead;
+        if (list1.next == null) {
+            list1.next = list2;
+        }
+
+        return head;
     }
 
 
@@ -81,6 +78,7 @@ public class ReverseEven {
         head = head.next;
         while(head != null){
             count++;
+            LinkedListNode temp = head.next;
             if(count % 2 == 0){
                 evenCurr.next = head;
                 evenCurr = evenCurr.next;
@@ -88,9 +86,10 @@ public class ReverseEven {
                 oddCurr.next = head;
                 oddCurr = oddCurr.next;
             }
-            head = head.next;
+            head = temp;
         }
-
+        oddCurr.next = null;
+        evenCurr.next = null;
         return new Pair(oddHead, evenHead);
     }
 
@@ -115,4 +114,26 @@ public class ReverseEven {
         System.out.print("After Reverse: ");
         LinkedList.display(listHead);
     }
+
+    @Test
+    public void testSplitEven(){
+        int[] arr = {7, 14, 21, 28, 9};
+        LinkedListNode listHead = LinkedList.createLinkedList(arr);
+        System.out.println("Original list: ");
+        LinkedList.display(listHead);
+
+        Pair pair = splitEven(listHead);
+        System.out.println("odd list: ");
+        LinkedList.display(pair.first);
+        System.out.println("even list: ");
+        LinkedList.display(pair.second);
+
+        LinkedListNode reverseEven = reverse(pair.second);
+        System.out.println("reversed even list: ");
+        LinkedList.display(reverseEven);
+
+        LinkedListNode mergedList = merge(pair.first, reverseEven);
+        LinkedList.display(mergedList);
+    }
+
 }
