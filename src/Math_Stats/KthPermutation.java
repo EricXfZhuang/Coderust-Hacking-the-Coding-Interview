@@ -6,21 +6,19 @@ import java.util.List;
 public class KthPermutation {
     static void findKthPermutation(List<Character> v, int k, StringBuilder result) {
         //TODO: Write - Your - Code
+        if(v.isEmpty())
+            return;
         int n = v.size();
-        int fac = factorial(n);
-        System.out.println("k: " + k);
-        while(n > 0){
-            int pick = fac / n;
-            result.append(v.get(k % pick));
-            v.remove(k % pick);
-            fac /= n;
-            n--;
-            k %= pick;
-        }
+        int fac = factorial(n - 1);
+        int selected = (k - 1) / fac;
+        result.append(v.get(selected));
+        v.remove(selected);
+        k = k - selected * fac;
+        findKthPermutation(v, k, result);
     }
 
     static int factorial(int n){
-        if(n == 1){
+        if(n == 1 || n == 0){
             return 1;
         }
 
